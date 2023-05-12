@@ -1,4 +1,5 @@
-Steps to start 
+Laravel 9.19| PHP 8.0.2
+Steps to deploy and start the project:
 1. You have to start Apache server from XAMPP
 2. create database and name it testwork_coalition
 3. create file .env and copy content of .env.example
