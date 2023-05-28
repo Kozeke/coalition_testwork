@@ -7,5 +7,6 @@ Steps to deploy and start the project:
 5. php artisan serve
 
 Trello like web-application using Laravel 9 and Vue 3. It can be used to create Boards and Cards inside boards. Cards are dragable like in trello.
-![Uploading image.png…]()
+![image](https://github.com/Kozeke/coalition_testwork/assets/50287254/5e98cd95-c049-431b-b68a-cecb0a7fb160)
+
 
