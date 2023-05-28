@@ -5,21 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @method static findOrFail(int $taskId)
  * @property mixed $name
  * @property mixed $priority
  */
-class Task extends Model
+class CardList extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "priority", "project_id"];
+    protected $fillable = ["name", "board_id", "user_id"];
 
 
-    public function project(): BelongsTo
+    public function board(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Board::class);
+    }
+
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class);
     }
 }

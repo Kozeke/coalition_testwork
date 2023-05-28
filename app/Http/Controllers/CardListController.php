@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
+use App\Models\CardList;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Routing\Redirector;
-use App\Models\Project;
+use App\Models\Board;
+use Inertia\Inertia;
+use Inertia\Response;
 
 
-class TaskController extends Controller
+class CardListController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,20 +39,32 @@ class TaskController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function show(): Response
+    {
+        $projects = Project::findOrFail(1);
+        $tasks = Task::where('project_id', 1)->get();
+        return Inertia::render('Project', ["tasks" => $tasks]);
+//        return view('tasks.show', ["projects" => $projects]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
-     * @param TaskRequest $request
+     * @param Board $board
      * @return Application|RedirectResponse|Redirector
      */
-    public function store(TaskRequest $request): Redirector|RedirectResponse|Application
+    public function store(Board $board): Redirector|RedirectResponse|Application
     {
-        $task = new Task();
-        $task->name = $request['name'];
-        $task->priority = $request['priority'];
-        $project = Project::findOrFail($request['project_id']);
-        $task->project()->associate($project);
-        $task->save();
-        return redirect()->route('task.index');
+        CardList::create([
+            "name" => request('name'),
+            'user_id' => auth()->id(),
+            "board_id" => $board->id,
+        ]);
+        return redirect()->back();
     }
 
     /**

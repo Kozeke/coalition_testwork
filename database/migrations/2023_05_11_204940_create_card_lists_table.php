@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('card_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('name');            
+            $table->string('name');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('board_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('tasks');
     }
 };

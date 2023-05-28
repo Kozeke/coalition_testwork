@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static get()
  * @method static create(array $array)
  */
-class Project extends Model
+class Board extends Model
 {
     use HasFactory;
 
@@ -19,8 +19,8 @@ class Project extends Model
 
     public $timestamps = false;
 
-    public function tasks(): HasMany
+    public function lists(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(CardList::class);
     }
 }

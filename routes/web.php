@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\BoardController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\CardListController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\ProjectController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +19,31 @@ use App\Http\Controllers\ProjectController;
 |
 */
 
-Route::get('/', function(){
-    return view('welcome');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-Route::resource("task", TaskController::class)->except('show');
-Route::resource("project", ProjectController::class)->only('index','create','store');
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/boards', [BoardController::class, 'index'])->name('boards');
+    Route::get('/boards/{board}', [BoardController::class, 'show'])->name('boards.show');
+    Route::put('/boards/{board}', [BoardController::class, 'update'])->name('boards.update');
+    Route::post('/boards', [BoardController::class, 'store'])->name('boards.store');
+
+    Route::post('/boards/{board}/lists', [CardListController::class, 'store'])->middleware(['auth', 'verified'])->name('cardLists.store');
+    Route::post('/cards', [CardController::class, 'store'])->name('cards.store');
+    Route::put('/cards/{card}', [CardController::class, 'update'])->name('cards.update');
+    Route::put('/cards/{card}/move', [CardController::class, 'move'])->name('cards.move');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__ . '/auth.php';
